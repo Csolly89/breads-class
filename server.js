@@ -1,11 +1,13 @@
 // DEPENDENCIES
 const express = require('express')
 const methodOverride = require('method-override')
+const mongoose = require('mongoose')
 
 // CONFIGURATION
 require('dotenv').config()
 const PORT = process.env.PORT
 const app = express()
+const MONGO_URI = process.env.MONGO_URI
 
 
 // MIDDLEWARE
@@ -15,6 +17,8 @@ app.engine('jsx', require('express-react-views').createEngine())
 app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'))
+
+// rs
 
 // ROUTES
 app.get('/', (req, res) => {
@@ -31,7 +35,12 @@ app.get('*', (req,res) => {
 }) 
   
 // LISTEN
-app.listen(PORT, () => {
-  console.log('listening on port', PORT);
-})
- 
+const start = async () => {
+  await mongoose.connect(MONGO_URI);
+  console.log('Connected to database')
+  app.listen(PORT, () => {
+    console.log('listening on port', PORT);
+  })
+}
+
+start()
