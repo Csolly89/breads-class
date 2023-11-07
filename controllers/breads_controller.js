@@ -1,6 +1,7 @@
 const express = require('express')
 const breads = express.Router()
 const Bread = require('../models/bread.js')
+const Baker = require('../models/baker')
 
 // INDEX
 breads.get('/', (req, res) => {
@@ -15,9 +16,10 @@ breads.get('/', (req, res) => {
 
 
 //New
-breads.get('/new', (req,res) =>{
-  res.render('new')
-})
+breads.get('/new', async (req,res) =>{
+  const bakers = await Baker.find()
+  res.render('new', bakers )
+  })
 
 // EDIT
 breads.get('/:indexArray/edit', (req, res) => {
@@ -59,7 +61,7 @@ breads.post('/', (req, res) => {
 
 
 
-// UPDATE
+// Edit - /PUT
 breads.put('/:arrayIndex', (req, res) => {
   if(req.body.hasGluten === 'on'){
     req.body.hasGluten = true
